@@ -12,7 +12,7 @@ PORT?=4000
 NODE_ENV?=production
 
 # Backend entry faylın fərqlidirsə, bunu dəyiş:
-ENTRY?=index.js
+ENTRY?=server.js
 
 # ----------- Basics ----------
 install:
