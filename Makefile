@@ -57,6 +57,13 @@ pm2-startup:
 	@echo "⚙️ Enabling PM2 startup on boot (needs sudo once)..."
 	pm2 startup
 
+pm2-up:
+	@echo "♻️ PM2 up (start if missing, otherwise restart) on port $(PORT)..."
+	@pm2 describe "$(APP_NAME)" >/dev/null 2>&1 && \
+		( cd $(BACKEND_DIR) && PORT=$(PORT) NODE_ENV=$(NODE_ENV) pm2 restart "$(APP_NAME)" --update-env ) || \
+		( cd $(BACKEND_DIR) && PORT=$(PORT) NODE_ENV=$(NODE_ENV) pm2 start $(ENTRY) --name "$(APP_NAME)" --update-env )
+
+
 # ----------- Deploy ----------
 deploy: install build pm2-restart pm2-save
 	@echo "✅ Deploy done. Backend on port $(PORT)."
