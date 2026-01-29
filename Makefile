@@ -65,7 +65,7 @@ pm2-up:
 
 
 # ----------- Deploy ----------
-deploy: install build pm2-restart pm2-save
+deploy: install build pm2-up pm2-save
 	@echo "✅ Deploy done. Backend on port $(PORT)."
 
 first-deploy: install build pm2-start pm2-save
