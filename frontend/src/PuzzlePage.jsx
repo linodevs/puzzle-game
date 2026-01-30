@@ -22,7 +22,7 @@ export default function PuzzlePage({ slug: slugProp }) {
     setStatus({ loading: true, error: "" });
     fetch(`${API_BASE}/api/puzzle/${slug}`)
       .then((res) => {
-        if (!res.ok) throw new Error("Puzzle not found");
+        if (!res.ok) throw new Error("Pazl tapılmadı");
         return res.json();
       })
       .then((data) => {
@@ -30,7 +30,7 @@ export default function PuzzlePage({ slug: slugProp }) {
         setStatus({ loading: false, error: "" });
       })
       .catch((err) => {
-        setStatus({ loading: false, error: err.message || "Failed to load puzzle" });
+        setStatus({ loading: false, error: err.message || "Pazlı yükləmək alınmadı" });
       });
   }, [slug]);
 
@@ -56,12 +56,12 @@ export default function PuzzlePage({ slug: slugProp }) {
   return (
     <div className="page-shell">
       <div className="card-panel">
-        <h2>Open Your Puzzle</h2>
-        <p>Paste the unique slug to unlock your Valentine surprise.</p>
+        <h2>Pazlınızı Açın</h2>
+        <p>Valentin sürprizini açmaq üçün unikal kodu daxil edin.</p>
         <div className="field-row">
           <input
             className="text-input"
-            placeholder="customer-name-xY2z"
+            placeholder="müştəri-adi-xY2z"
             value={slugInput}
             onChange={(e) => setSlugInput(e.target.value.trim())}
           />
@@ -70,13 +70,13 @@ export default function PuzzlePage({ slug: slugProp }) {
             onClick={() => setSlugInput(slugInput)}
             type="button"
           >
-            Load Puzzle
+            Pazlı Yüklə
           </button>
         </div>
         {status.error && <div className="error-text">{status.error}</div>}
       </div>
 
-      {status.loading && <div className="card-panel">Loading puzzle...</div>}
+      {status.loading && <div className="card-panel">Pazl yüklənir...</div>}
       {puzzleConfig && (
         <PuzzleGame puzzleConfig={puzzleConfig} showUploader={false} onComplete={handleComplete} />
       )}

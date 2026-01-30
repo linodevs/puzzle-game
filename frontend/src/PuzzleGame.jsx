@@ -204,6 +204,7 @@ function JigsawPiece({
         width={w}
         height={h}
         crop={crop}
+        perfectDrawEnabled={false}
         shadowColor={isActive ? "rgba(178, 34, 34, 0.5)" : "rgba(0,0,0,0.15)"}
         shadowBlur={isActive ? 16 : 6}
         shadowOffset={{ x: 0, y: 2 }}
@@ -211,10 +212,14 @@ function JigsawPiece({
       />
 
       <Shape
+        perfectDrawEnabled={false}
         sceneFunc={(ctx, shape) => {
+          const showOutline = isActive && !locked;
           drawJigsawPath(ctx, w, h, edges);
-          ctx.strokeStyle = isActive ? "#B22222" : "#e5bfc7";
-          ctx.lineWidth = isActive ? 2 : 1;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
+          ctx.strokeStyle = showOutline ? "#B22222" : "rgba(0,0,0,0)";
+          ctx.lineWidth = showOutline ? 2 : 0;
           ctx.stroke();
           ctx.fillStrokeShape(shape);
         }}
@@ -443,10 +448,10 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
   const heartSlots = 10;
   const filledHearts = Math.round(progress * heartSlots);
   const secretMessage =
-    (puzzleConfig?.secretMessage || "").trim() || "You've captured my heart!";
+    (puzzleConfig?.secretMessage || "").trim() || "Təbriklər! Qəlbimi fəth etdin!";
   const subMessage = (puzzleConfig?.name || "").trim()
-    ? `A puzzle made for ${puzzleConfig.name}.`
-    : "Upload a photo, slide the pieces, and watch the hearts align.";
+    ? `${puzzleConfig.name} üçün sevgi ilə hazırlanmış pazl.`
+    : "Şəkil yüklə, parçaları sürüşdür və qəlblərin necə uyğunlaşdığını izle.";
 
   return (
     <div className="valentine-shell">
@@ -461,8 +466,8 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
 
       <header className="valentine-header">
         <div>
-          <p className="eyebrow">February 14th Special</p>
-          <h1>Love-Locked Jigsaw</h1>
+          <p className="eyebrow">14 Fevrala Özəl</p>
+          <h1>Sevgi ilə Kilidlənmiş Pazl</h1>
           <p className="subtitle">{subMessage}</p>
         </div>
 
@@ -476,9 +481,9 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
               onChange={onFileChange}
             />
             <label className="button button-primary" htmlFor="upload-photo">
-              Choose a Photo
+              Şəkil Seç
             </label>
-            {completed && <div className="status-pill">Completed 💖</div>}
+            {completed && <div className="status-pill">Tamamlandı 💖</div>}
           </div>
         )}
       </header>
@@ -486,10 +491,10 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
       <section className="valentine-body">
         <div className="progress-panel">
           <div className="progress-labels">
-            <span>Your Love Trail</span>
+            <span>Sevgi Yolun</span>
             <span>{Math.round(progress * 100)}%</span>
           </div>
-          <div className="progress-hearts" role="img" aria-label="Puzzle progress">
+          <div className="progress-hearts" role="img" aria-label="Pazl irəliləyişi">
             {Array.from({ length: heartSlots }).map((_, i) => (
               <span
                 key={`heart-${i}`}
@@ -500,7 +505,7 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
             ))}
           </div>
           <div className="progress-caption">
-            {completed ? secretMessage : "Match the pieces to unlock the love."}
+            {completed ? secretMessage : "Sevgini açmaq üçün parçaları uyğunlaşdır."}
           </div>
         </div>
 
@@ -547,6 +552,7 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
                     y={BOARD_Y}
                     width={BOARD_SIZE}
                     height={BOARD_SIZE}
+                    fill="#fff8fb"
                     stroke="#d7a6b2"
                     strokeWidth={2}
                     cornerRadius={18}
@@ -587,8 +593,8 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
 
           <div className="game-footnote">
             <p>
-              Drag pieces from the tray into the board. Pieces gently snap into place
-              when they find their match.
+              Parçaları sağdakı sahədən lövhəyə sürüklə. Uyğunluq tapanda yumşaq
+              şəkildə yerinə oturur.
             </p>
           </div>
 
@@ -596,7 +602,7 @@ export default function PuzzleGame({ puzzleConfig, showUploader = true, onComple
             <div className="love-explosion" aria-live="polite">
               <div className="love-message">
                 <h2>{secretMessage}</h2>
-                <p>Every piece fits when it’s you.</p>
+                <p>Sən olanda hər parça yerini tapır.</p>
               </div>
               <div className="confetti">
                 {Array.from({ length: 16 }).map((_, i) => (

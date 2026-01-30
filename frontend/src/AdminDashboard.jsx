@@ -32,7 +32,7 @@ export default function AdminDashboard() {
           ...authHeader(credentials.user, credentials.pass),
         },
       });
-      if (!res.ok) throw new Error("Failed to fetch customers");
+      if (!res.ok) throw new Error("Müştəriləri yükləmək alınmadı");
       const data = await res.json();
       setCustomers(data);
       setStatus((prev) => ({ ...prev, loading: false }));
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
       setStatus((prev) => ({
         ...prev,
         loading: false,
-        error: err.message || "Failed to load customers",
+        error: err.message || "Müştəriləri yükləmək alınmadı",
       }));
     }
   };
@@ -52,12 +52,12 @@ export default function AdminDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthed) {
-      setStatus((prev) => ({ ...prev, error: "Enter admin credentials first." }));
+      setStatus((prev) => ({ ...prev, error: "Əvvəlcə admin məlumatlarını daxil et." }));
       return;
     }
 
     if (!form.name || !form.photo) {
-      setStatus((prev) => ({ ...prev, error: "Name and photo are required." }));
+      setStatus((prev) => ({ ...prev, error: "Ad və şəkil mütləqdir." }));
       return;
     }
 
@@ -76,25 +76,25 @@ export default function AdminDashboard() {
         },
         body: payload,
       });
-      if (!res.ok) throw new Error("Failed to create customer");
+      if (!res.ok) throw new Error("Müştəri yaratmaq alınmadı");
       const data = await res.json();
-      setStatus({ loading: false, error: "", success: "Customer created." });
+      setStatus({ loading: false, error: "", success: "Müştəri yaradıldı." });
       setForm({ name: "", secret_message: "", puzzle_pieces: "12", photo: null });
       setCustomers((prev) => [data, ...prev]);
     } catch (err) {
-      setStatus({ loading: false, error: err.message || "Save failed", success: "" });
+      setStatus({ loading: false, error: err.message || "Yadda saxlamaq alınmadı", success: "" });
     }
   };
 
   return (
     <div className="page-shell">
       <div className="card-panel">
-        <h2>Admin Dashboard</h2>
-        <p>Create customer puzzles and manage Valentine surprises.</p>
+        <h2>Admin Paneli</h2>
+        <p>Müştəri pazllarını yarat və Valentin sürprizlərini idarə et.</p>
 
         <div className="grid-two">
           <div className="field">
-            <label>Admin Username</label>
+            <label>Admin İstifadəçi Adı</label>
             <input
               className="text-input"
               value={credentials.user}
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
             />
           </div>
           <div className="field">
-            <label>Admin Password</label>
+            <label>Admin Şifrəsi</label>
             <input
               className="text-input"
               type="password"
@@ -112,15 +112,15 @@ export default function AdminDashboard() {
           </div>
         </div>
         <button className="button button-primary" type="button" onClick={loadCustomers}>
-          Load Customers
+          Müştəriləri Yüklə
         </button>
       </div>
 
       <div className="card-panel">
-        <h3>Create Puzzle</h3>
+        <h3>Pazl Yarat</h3>
         <form className="form-stack" onSubmit={handleSubmit}>
           <div className="field">
-            <label>Customer Name</label>
+            <label>Müştəri Adı</label>
             <input
               className="text-input"
               value={form.name}
@@ -128,16 +128,17 @@ export default function AdminDashboard() {
             />
           </div>
           <div className="field">
-            <label>Secret Message</label>
+            <label>Gizli Təbrik Mesajınız</label>
             <textarea
               className="text-input"
               rows="3"
               value={form.secret_message}
               onChange={(e) => setForm({ ...form, secret_message: e.target.value })}
+              placeholder="Mesajınızı bura yazın..."
             />
           </div>
           <div className="field">
-            <label>Puzzle Pieces</label>
+            <label>Pazl Parçaları</label>
             <select
               className="text-input"
               value={form.puzzle_pieces}
@@ -149,7 +150,7 @@ export default function AdminDashboard() {
             </select>
           </div>
           <div className="field">
-            <label>Photo Upload</label>
+            <label>Şəkil Yüklə</label>
             <input
               className="text-input"
               type="file"
@@ -158,7 +159,7 @@ export default function AdminDashboard() {
             />
           </div>
           <button className="button button-primary" type="submit" disabled={status.loading}>
-            {status.loading ? "Saving..." : "Create Puzzle"}
+            {status.loading ? "Yadda saxlanılır..." : "Pazl Yarat"}
           </button>
           {status.error && <div className="error-text">{status.error}</div>}
           {status.success && <div className="success-text">{status.success}</div>}
@@ -166,19 +167,19 @@ export default function AdminDashboard() {
       </div>
 
       <div className="card-panel">
-        <h3>Customers</h3>
+        <h3>Müştərilər</h3>
         <div className="table">
           <div className="table-row table-head">
-            <span>Name</span>
-            <span>Pieces</span>
-            <span>Status</span>
-            <span>Slug</span>
+            <span>Ad</span>
+            <span>Parçalar</span>
+            <span>Vəziyyət</span>
+            <span>Kod</span>
           </div>
           {customers.map((customer) => (
             <div className="table-row" key={customer._id}>
               <span>{customer.name}</span>
               <span>{customer.puzzle_pieces}</span>
-              <span>{customer.is_completed ? "Completed" : "Pending"}</span>
+              <span>{customer.is_completed ? "Tamamlandı" : "Gözləyir"}</span>
               <span>{customer.slug}</span>
             </div>
           ))}

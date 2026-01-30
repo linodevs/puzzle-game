@@ -17,19 +17,19 @@ export default function GamePage() {
 
   useEffect(() => {
     if (!giftId) {
-      setError("Missing gift link.");
+      setError("Hədiyyə linki yoxdur.");
       return;
     }
 
     const stored = localStorage.getItem(`puzzleGift:${giftId}`);
     if (!stored) {
-      setError("Gift link not found.");
+      setError("Hədiyyə linki tapılmadı.");
       return;
     }
     try {
       setGift(JSON.parse(stored));
     } catch {
-      setError("Gift link is corrupted.");
+      setError("Hədiyyə linki zədələnib.");
     }
   }, [giftId]);
 
@@ -48,7 +48,7 @@ export default function GamePage() {
     return (
       <div className="page-shell">
         <div className="card-panel">
-          <h2>Unable to open puzzle</h2>
+          <h2>Pazlı açmaq mümkün olmadı</h2>
           <p>{error}</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function GamePage() {
   if (!puzzleConfig) {
     return (
       <div className="page-shell">
-        <div className="card-panel">Loading your puzzle...</div>
+        <div className="card-panel">Pazlınız yüklənir...</div>
       </div>
     );
   }

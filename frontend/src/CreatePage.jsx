@@ -118,7 +118,7 @@ export default function CreatePage() {
 
     localStorage.setItem(`puzzleGift:${id}`, JSON.stringify(record));
     setGiftId(id);
-    setToast("Gift link created!");
+    setToast("Hədiyyə linki yaradıldı!");
     setTimeout(() => setToast(""), 2400);
   };
 
@@ -126,9 +126,9 @@ export default function CreatePage() {
     if (!giftUrl) return;
     try {
       await navigator.clipboard.writeText(giftUrl);
-      setToast("Link copied to clipboard");
+      setToast("Link kopyalandı!");
     } catch {
-      setToast("Copy failed. Select the link manually.");
+      setToast("Kopyalama alınmadı. Linki əl ilə seçin.");
     }
     setTimeout(() => setToast(""), 2400);
   };
@@ -138,29 +138,29 @@ export default function CreatePage() {
       <div className="card-panel dashboard">
         <div className="dashboard-head">
           <div>
-            <p className="eyebrow">Creator Studio</p>
-            <h2>Create a Valentine Puzzle</h2>
+            <p className="eyebrow">Yaradıcı Studiyası</p>
+            <h2>Valentin Pazlını Yarat</h2>
             <p className="muted">
-              Upload a photo or choose a theme, then generate a private gift link.
+              Şəkil yüklə və ya tema seç, sonra özəl hədiyyə linkini yarat.
             </p>
           </div>
           <button className="button button-primary" onClick={handleGenerate} type="button">
-            Generate Gift Link
+            Hədiyyə Linkini Yarat
           </button>
         </div>
 
         <div className="grid-two">
           <div className="field">
-            <label>Recipient Name</label>
+            <label>Alıcının Adı</label>
             <input
               className="text-input"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="e.g. Aylin"
+              placeholder="məs. Aylin"
             />
           </div>
           <div className="field">
-            <label>Puzzle Pieces</label>
+            <label>Pazl Parçaları</label>
             <select
               className="text-input"
               value={form.puzzlePieces}
@@ -172,32 +172,32 @@ export default function CreatePage() {
             </select>
           </div>
           <div className="field">
-            <label>Secret Message</label>
+            <label>Gizli Təbrik Mesajınız</label>
             <textarea
               className="text-input"
               rows="3"
               value={form.secretMessage}
               onChange={(e) => setForm({ ...form, secretMessage: e.target.value })}
-              placeholder="Write something heartfelt..."
+              placeholder="Mesajınızı bura yazın..."
             />
           </div>
           <div className="field">
-            <label>Theme (optional)</label>
+            <label>Tema (ixtiyari)</label>
             <select
               className="text-input"
               value={form.theme}
               onChange={(e) => setForm({ ...form, theme: e.target.value })}
             >
-              <option value="blush">Blush Glow</option>
-              <option value="sunset">Sunset Rose</option>
-              <option value="rose">Crimson Rose</option>
+              <option value="blush">Zərif Çəhrayı Parıltı</option>
+              <option value="sunset">Günbatımı Qızılgülü</option>
+              <option value="rose">Al Qızılgül</option>
             </select>
           </div>
         </div>
 
         <div className="grid-two">
           <div className="field">
-            <label>Upload Image (optional)</label>
+            <label>Şəkil Yüklə</label>
             <input
               className="text-input"
               type="file"
@@ -207,9 +207,9 @@ export default function CreatePage() {
           </div>
           <div className="preview-box">
             {previewUrl ? (
-              <img src={previewUrl} alt="Preview" />
+              <img src={previewUrl} alt="Ön baxış" />
             ) : (
-              <span>No image uploaded yet.</span>
+              <span>Hələ şəkil yüklənməyib.</span>
             )}
           </div>
         </div>
@@ -217,18 +217,18 @@ export default function CreatePage() {
         {giftUrl && (
           <div className="link-box">
             <div>
-              <p className="muted">Share this gift link</p>
+              <p className="muted">Bu hədiyyə linkini paylaş</p>
               <div className="link-url">{giftUrl}</div>
             </div>
             <button className="button button-primary" onClick={copyLink} type="button">
-              Copy Link
+              Linki Kopyala
             </button>
           </div>
         )}
       </div>
 
       <div className="card-panel">
-        <h3>Preview</h3>
+        <h3>Ön Baxış</h3>
         <PuzzleGame
           puzzleConfig={{
             id: "preview",

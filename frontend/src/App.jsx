@@ -16,14 +16,14 @@ export default function App() {
   return (
     <div className="page-shell">
       <div className="card-panel">
-        <h2>Welcome</h2>
-        <p>Choose your path to start the Valentine puzzle experience.</p>
+        <h2>Xoş Gəldin</h2>
+        <p>Valentin pazl macərasına başlamaq üçün yolunu seç.</p>
         <div className="field-row">
           <a className="button button-primary" href="/create">
-            Create a Gift
+            Hədiyyə Yarat
           </a>
           <a className="button button-primary" href="/game/love-12345">
-            Open Puzzle
+            Pazlı Aç
           </a>
         </div>
       </div>
