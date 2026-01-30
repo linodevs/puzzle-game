@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname || "").toLowerCase();
-    const safeBase = (file.originalname || "upload")
+    const safeBase = (file.originalname || "sekil")
       .replace(/\s+/g, "-")
       .replace(/[^a-zA-Z0-9-_]/g, "")
       .toLowerCase()
@@ -62,7 +62,7 @@ function slugify(text) {
 }
 
 function generateSlug(name) {
-  const base = slugify(name) || "customer";
+  const base = slugify(name) || "musteri";
   const suffix = crypto.randomBytes(2).toString("hex");
   return `${base}-${suffix}`;
 }
@@ -70,8 +70,8 @@ function generateSlug(name) {
 function requireAdmin(req, res, next) {
   const auth = req.headers.authorization || "";
   if (!auth.startsWith("Basic ")) {
-    res.set("WWW-Authenticate", 'Basic realm="Admin"');
-    return res.status(401).json({ error: "Authentication required" });
+    res.set("WWW-Authenticate", 'Basic realm="Admin Paneli"');
+    return res.status(401).json({ error: "Doğrulama tələb olunur" });
   }
 
   const creds = Buffer.from(auth.replace("Basic ", ""), "base64")
@@ -81,11 +81,11 @@ function requireAdmin(req, res, next) {
   const pass = creds[1] || "";
 
   if (!process.env.ADMIN_USER || !process.env.ADMIN_PASS) {
-    return res.status(500).json({ error: "Admin credentials not configured" });
+    return res.status(500).json({ error: "Admin məlumatları konfiqurasiya edilməyib" });
   }
 
   if (user !== process.env.ADMIN_USER || pass !== process.env.ADMIN_PASS) {
-    return res.status(403).json({ error: "Invalid credentials" });
+    return res.status(403).json({ error: "Məlumatlar yanlışdır" });
   }
 
   return next();
@@ -100,7 +100,7 @@ app.post(
     const pieces = Number.parseInt(puzzle_pieces, 10) || 12;
 
     if (!name || !req.file) {
-      return res.status(400).json({ error: "Name and photo are required" });
+      return res.status(400).json({ error: "Ad və şəkil mütləqdir" });
     }
 
     const slug = generateSlug(name);
@@ -116,7 +116,7 @@ app.post(
 
     db.insert(record, (err, doc) => {
       if (err) {
-        return res.status(500).json({ error: "Failed to save customer" });
+        return res.status(500).json({ error: "Müştərini yadda saxlamaq alınmadı" });
       }
       return res.json(doc);
     });
@@ -128,7 +128,7 @@ app.get("/api/admin/customers", requireAdmin, (_req, res) => {
     .sort({ created_at: -1 })
     .exec((err, docs) => {
       if (err) {
-        return res.status(500).json({ error: "Failed to fetch customers" });
+        return res.status(500).json({ error: "Müştəriləri yükləmək alınmadı" });
       }
       return res.json(docs);
     });
@@ -137,10 +137,10 @@ app.get("/api/admin/customers", requireAdmin, (_req, res) => {
 app.get("/api/puzzle/:slug", (req, res) => {
   db.findOne({ slug: req.params.slug }, (err, doc) => {
     if (err) {
-      return res.status(500).json({ error: "Failed to fetch puzzle" });
+      return res.status(500).json({ error: "Pazlı yükləmək alınmadı" });
     }
     if (!doc) {
-      return res.status(404).json({ error: "Puzzle not found" });
+      return res.status(404).json({ error: "Pazl tapılmadı" });
     }
     return res.json(doc);
   });
@@ -153,10 +153,10 @@ app.post("/api/puzzle/complete/:id", (req, res) => {
     { returnUpdatedDocs: true },
     (err, _num, doc) => {
       if (err) {
-        return res.status(500).json({ error: "Failed to update puzzle" });
+        return res.status(500).json({ error: "Pazlı yeniləmək alınmadı" });
       }
       if (!doc) {
-        return res.status(404).json({ error: "Puzzle not found" });
+        return res.status(404).json({ error: "Pazl tapılmadı" });
       }
       return res.json(doc);
     }
@@ -169,5 +169,5 @@ app.get("/api/health", (_req, res) => {
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Backend işləyir: http://localhost:${PORT}`);
 });

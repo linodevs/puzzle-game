@@ -22,7 +22,7 @@ export default function App() {
           <a className="button button-primary" href="/create">
             Hədiyyə Yarat
           </a>
-          <a className="button button-primary" href="/game/love-12345">
+          <a className="button button-primary" href="/game/sevgi-12345">
             Pazlı Aç
           </a>
         </div>
